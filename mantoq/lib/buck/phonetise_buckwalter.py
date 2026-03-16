@@ -238,6 +238,8 @@ fixedWords = {
     "k*lk": ["k a * aa l i0 k a", "k a * aa l i1 k"],
     "*lkm": "* aa l i0 k u1 m",
     ">wl}k": ["< u0 l aa < i0 k a", "< u0 l aa < i1 k"],
+    ">wlw": "< u0 l uu0",
+    ">wly": "< u0 l ii0",
     "Th": "T aa h a",
     "lkn": ["l aa k i0 nn a", "l aa k i1 n"],
     "lknh": "l aa k i0 nn a h u0",
@@ -287,7 +289,19 @@ def isFixedWord(word, results, orthography, pronunciations):
 
 def preprocess_utterance(utterance):
     # Do some normalisation work and split utterance to words
+
+    # Fix Amr (silent waw)
+    utterance = re.sub(r"\bEam(o?)r([aouiFNK]*)w([aouiFNK]*)\b", r"Eam\1r\2\3", utterance)
+
     utterance = utterance.replace("AF", "F")
+    utterance = utterance.replace("aFA", "F")
+    utterance = utterance.replace("FA", "F")
+    utterance = utterance.replace("YF", "F")
+    utterance = utterance.replace("FY", "F")
+    utterance = utterance.replace("aF", "F")
+    utterance = utterance.replace("uN", "N")
+    utterance = utterance.replace("oN", "N")
+    utterance = utterance.replace("iK", "K")
     utterance = utterance.replace("\u0640", "")
     utterance = utterance.replace("o", "")
     utterance = utterance.replace("aA", "A")
@@ -418,9 +432,10 @@ def process_word(word):
                             phones += [vowelMap[letter][0][0]]
                     else:
                         if letter1 in ["A"] and letter in ["w"] and letter2 in ["e"]:
-                            phones += [
-                                [ambiguousConsonantMap[letter], vowelMap[letter][0][0]]
-                            ]
+                            if letter_1 in ["u"]:
+                                phones += [[vowelMap[letter][0][0], ambiguousConsonantMap[letter]]]
+                            else:
+                                phones += [ambiguousConsonantMap[letter]]
                         else:
                             phones += [ambiguousConsonantMap[letter]]
                 elif letter1 in ["~"]:
@@ -479,9 +494,9 @@ def process_word(word):
                     phones += [["a", vowelMap[letter][0][0]]]
                 elif letter in ["A"] and letter_1 in ["u", "i"]:
                     temp = True  # do nothing
-                # Waw al jama3a: The Alif after is optional
-                elif letter in ["A"] and letter_1 in ["w"] and letter1 in ["e"]:
-                    phones += [[vowelMap[letter][0][0], vowelMap[letter][0][1]]]
+                # Waw al jama3a: The Alif after is silent
+                elif letter in ["A", "Y"] and letter_1 in ["w"] and letter1 in ["e"]:
+                    phones += [""]
                 elif letter in ["A", "Y"] and letter1 in ["e"]:
                     if emphaticContext:
                         phones += [[vowelMap[letter][1][0], vowelMap["a"][1]]]
