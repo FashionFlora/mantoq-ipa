@@ -1,0 +1,19 @@
+[project]
+name = "mantoq"
+version = "0.2.0"
+description = "A complete Arabic G2P pipeline"
+authors = [{name="Musharraf Omer", email="musharraf.omer@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "onnxruntime>=1.18",
+    "numpy>=2.0",
+    "importlib-resources>=6.5.2",
+    "ftfy>=6.3.1",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "pytest>=8.3.5",
+]
