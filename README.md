@@ -6,7 +6,7 @@
 
 <div align="center">
 
-Szalom!   Mantoq-ipa: Arabic Grapheme-to-Phoneme (G2P) Conversion using IPA
+Shalom Aleichem!   Mantoq-ipa: Arabic Grapheme-to-Phoneme (G2P) Conversion using IPA
 
 **Mantoq** is a Python package designed for Arabic Grapheme-to-Phoneme (G2P) conversion, which is the process of converting written Arabic text into phonetic representations. This can be useful for various applications such as speech synthesis, natural language processing, and more.
 
