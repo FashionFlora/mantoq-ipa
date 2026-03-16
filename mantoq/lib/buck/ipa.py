@@ -14,7 +14,7 @@ ipa_map = {
     "z": "z",
     "E": "ʕ",
     "h": "h",
-    "j": "dʒ",
+    "j": "ʤ",
     "s": "s",
     "g": "ɣ",
     "H": "ħ",
@@ -144,7 +144,7 @@ def _apply_stress(tokens):
                         stress_idx = len(syllables) - 3
                     
         if stress_idx < len(syllables):
-            syllables[stress_idx].insert(0, 'ˈ')
+            syllables[stress_idx].insert(0, "ˈ")
             
         for s in syllables:
             stressed_tokens.extend(s)

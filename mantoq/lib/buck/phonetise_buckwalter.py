@@ -109,6 +109,10 @@ def arabic_to_buckwalter(word):  # Convert input string to Buckwalter
             res += arabic_to_buckw_dict[letter]
         else:
             res += letter
+    # Fix double consecutive conflicting diacritic typos (keep last)
+    res = re.sub(r'[auioFNK]+(?=[auioFNK])', '', res)
+    # Prefix Wa/Fa/Ka/Bi + Alif Wasla: Remove the Alif Wasla if it's part of an article or non-vowelled consonant
+    res = re.sub(r'^(wa|fa|ka|bi)A(?=lo|l[^aiouoFNK~]|[^laiouoFNK~][o~]|[^laiouoFNK~]{2}|\Z)', r'\1', res)
     return res
 
 
@@ -271,8 +275,8 @@ def isFixedWord(word, results, orthography, pronunciations):
         lastLetter = ["i0"]
     elif lastLetter in unambiguousConsonantMap:
         lastLetter = [unambiguousConsonantMap[lastLetter]]
-    # Remove all dacritics from word
-    wordConsonants = re.sub(r"[^h*Ahn\'>wl}kmyTtfd]", "", word)
+    # Remove all diacritics from word
+    wordConsonants = re.sub(r"[oauiFNK~]", "", word)
     if wordConsonants in fixedWords:  # check if word is in the fixed word lookup table
         if isinstance(fixedWords[wordConsonants], list):
             for pronunciation in fixedWords[wordConsonants]:
@@ -349,6 +353,7 @@ def process_word(word):
     word = "bb" + word + "ee"
 
     phones = []  # Empty list which will hold individual possible word's pronunciation
+    sun_letter_idx_to_double = -1
 
     # -----------------------------------------------------------------------------------
     # MAIN LOOP: here is where the Modern Standard Arabic phonetisation rule-set starts--
@@ -377,16 +382,32 @@ def process_word(word):
         # ----------------------------------------------------------------------------------------------------------------
         if letter == "l":  # Lam is a consonant which requires special treatment
             # Lam could be omitted in definite article (sun letters)
-            if (not letter1 in diacritics and not letter1 in vowelMap) and letter2 in [
+            is_article = re.match(r"^bb([wfkb][aiouo~]?)?([>A<\|]?[aiouo~]?)?$|^bbli$", word[:index])
+            sun_letters = ["t", "^", "d", "*", "r", "z", "s", "$", "S", "D", "T", "Z", "l", "n"]
+            next_is_sun = False
+            check_idx = index + 1
+            if check_idx < len(word) and word[check_idx] == 'o':
+                check_idx += 1
+            if check_idx < len(word) and word[check_idx] in sun_letters:
+                next_is_sun = True
+
+            if is_article and next_is_sun:
+                phones += [ambiguousConsonantMap["l"][1]]  # omit
+                sun_letter_idx_to_double = check_idx
+            elif (not letter1 in diacritics and not letter1 in vowelMap) and letter2 in [
                 "~"
             ]:
                 phones += [ambiguousConsonantMap["l"][1]]  # omit
             else:
                 # do not omit
                 phones += [ambiguousConsonantMap["l"][0]]
-        # ----------------------------------------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------------------------
         # shadda just doubles the letter before it
         if letter == "~" and not letter_1 in ["w", "y"] and len(phones) > 0:
+            phones[-1] += phones[-1]
+        
+        # apply missed shadda for auto-assimilated sun letters
+        if index == sun_letter_idx_to_double and letter1 != "~" and len(phones) > 0:
             phones[-1] += phones[-1]
         # ----------------------------------------------------------------------------------------------------------------
         if letter == "|":  # Madda only changes based in emphaticness

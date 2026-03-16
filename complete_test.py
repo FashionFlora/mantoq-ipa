@@ -135,11 +135,10 @@ def run_tests():
             # Mantoq G2P Processing
             buckw_raw = arabic_to_buckwalter(word)
             mantoq_phonemes = process_utterance(buckw_raw)
-            ipa_stressed = arabic_to_ipa(word, space_separated=True)
+            ipa_stressed = arabic_to_ipa(word, space_separated=False)
             
             with open("coverage_results.txt", "a", encoding="utf-8") as f:
                 f.write(f"[{i:04d}/{total_words}] Oryginał: {word}\n")
-                f.write(f"           Mantoq Phs: {mantoq_phonemes}\n")
                 f.write(f"           IPA Stress: {ipa_stressed}\n")
                 f.write("-" * 80 + "\n")
             

@@ -14,7 +14,7 @@ print()
 
 # Po translacji na IPA
 print("--- PO: Przekonwertowane na IPA ---")
-ipa_spaced = mantoq.arabic_to_ipa(tekst, space_separated=True)
+ipa_spaced = mantoq.arabic_to_ipa(tekst, space_separated=False)
 print(ipa_spaced)
 print()
 
