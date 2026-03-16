@@ -111,6 +111,8 @@ def arabic_to_buckwalter(word):  # Convert input string to Buckwalter
             res += letter
     # Fix double consecutive conflicting diacritic typos (keep last)
     res = re.sub(r'[auioFNK]+(?=[auioFNK])', '', res)
+    # Ensure shadda (~) always precedes other diacritics
+    res = re.sub(r'([auioFNK])(~)', r'\2\1', res)
     # Prefix Wa/Fa/Ka/Bi + Alif Wasla: Remove the Alif Wasla if it's part of an article or non-vowelled consonant
     res = re.sub(r'^(wa|fa|ka|bi)A(?=lo|l[^aiouoFNK~]|[^laiouoFNK~][o~]|[^laiouoFNK~]{2}|\Z)', r'\1', res)
     return res
@@ -244,7 +246,7 @@ fixedWords = {
     ">wl}k": ["< u0 l aa < i0 k a", "< u0 l aa < i1 k"],
     ">wlw": "< u0 l uu0",
     ">wly": "< u0 l ii0",
-    "Th": "T aa h a",
+    "Th": ["T aa h aa", "T aa h a"],
     "lkn": ["l aa k i0 nn a", "l aa k i1 n"],
     "lknh": "l aa k i0 nn a h u0",
     "lknhm": "l aa k i0 nn a h u1 m",
@@ -252,8 +254,29 @@ fixedWords = {
     "lknkm": "l aa k i0 nn a k u1 m",
     "lknkmA": "l aa k i0 nn a k u0 m aa",
     "lknnA": "l aa k i0 nn a n aa",
-    "AlrHmn": ["rr a H m aa n i0", "rr a H m aa n"],
-    "Allh": ["ll aa h i0", "ll aa h", "ll AA h u0", "ll AA h a", "ll AA h", "ll A"],
+    "AlrHmn": [
+        "< a rr a H m aa n i0", "< a rr a H m aa n",
+        "< a rr a H m aa n u0", "< a rr a H m aa n a"
+    ],
+    "Allh": [
+        "< a ll aa h i0", "< a ll aa h", 
+        "< a ll AA h u0", "< a ll AA h a", 
+        "< a ll AA h", "< a ll A",
+        "ll aa h i0", "ll aa h", 
+        "ll AA h u0", "ll AA h a", 
+        "ll AA h", "ll A"
+    ],
+    "Allhm": [
+        "< a ll AA h u0 mm a", "< a ll aa h u0 mm a",
+        "ll AA h u0 mm a", "ll aa h u0 mm a"
+    ],
+    "<lh": [
+        "< i0 l aa h i0", "< i0 l aa h a", "< i0 l aa h u0", 
+        "< i0 l aa h i1 n", "< i0 l aa h u1 n", "< i0 l aa h a n"
+    ],
+    "<lhn": [
+        "< i0 l aa h u1 n", "< i0 l aa h i1 n", "< i0 l aa h a n"
+    ],
     "h*yn": ["h aa * a y n i0", "h aa * a y n"],
     "nt": "n i1 t",
     "fydyw": "v i0 d y uu1",
@@ -266,13 +289,19 @@ def isFixedWord(word, results, orthography, pronunciations):
     if len(word) > 0:
         lastLetter = word[-1]
     if lastLetter == "a":
-        lastLetter = ["a", "A"]
+        lastLetter = ["a", "A", "aa"]
     elif lastLetter == "A":
         lastLetter = ["aa"]
     elif lastLetter == "u":
         lastLetter = ["u0"]
     elif lastLetter == "i":
         lastLetter = ["i0"]
+    elif lastLetter == "N":
+        lastLetter = ["n"]
+    elif lastLetter == "K":
+        lastLetter = ["n"]
+    elif lastLetter == "F":
+        lastLetter = ["n"]
     elif lastLetter in unambiguousConsonantMap:
         lastLetter = [unambiguousConsonantMap[lastLetter]]
     # Remove all diacritics from word
@@ -461,9 +490,10 @@ def process_word(word):
                             phones += [ambiguousConsonantMap[letter]]
                 elif letter1 in ["~"]:
                     if (
-                        letter_1 in ["a"]
-                        or (letter in ["w"] and letter_1 in ["i", "y"])
-                        or (letter in ["y"] and letter_1 in ["w", "u"])
+                        letter_1 in ["a", "u", "i"]
+                        or (letter in ["w"] and letter_1 in ["i", "y", "u", "e"])
+                        or (letter in ["y"] and letter_1 in ["w", "u", "i", "e"])
+                        or letter_1 in consonants
                     ):
                         phones += [
                             ambiguousConsonantMap[letter],
@@ -511,7 +541,9 @@ def process_word(word):
                         phones += [vowelMap[letter][0][0]]
             # Alif could be ommited in definite article and beginning of some words
             if letter in ["a", "A", "Y"]:
-                if letter in ["A"] and letter_1 in ["w", "k"] and letter_2 == "b":
+                if letter == "A" and letter_1 == "b" and letter_2 == "b":
+                    phones += ["a"]
+                elif letter in ["A"] and letter_1 in ["w", "k"] and letter_2 == "b":
                     phones += [["a", vowelMap[letter][0][0]]]
                 elif letter in ["A"] and letter_1 in ["u", "i"]:
                     temp = True  # do nothing

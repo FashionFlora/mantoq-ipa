@@ -1,0 +1,47 @@
+=== ARABIC G2P MEGA SUITE SUMMARY ===
+Łączna liczba testów: 6404
+PASS: 6404
+FAIL: 0
+Smoke pass rate: 100.00%
+
+=== GOLD EVALUATION ===
+Brak gold setu. Ten bieg mierzy coverage / crash-rate, a nie realną accuracy.
+
+=== CATEGORY BREAKDOWN ===
+alif_maqsura_and_tanween: total=12, pass=12, fail=0, pass_rate=100.00%
+article_accusative: total=20, pass=20, fail=0, pass_rate=100.00%
+article_genitive: total=20, pass=20, fail=0, pass_rate=100.00%
+article_nominative: total=20, pass=20, fail=0, pass_rate=100.00%
+article_with_bi: total=19, pass=19, fail=0, pass_rate=100.00%
+article_with_fa: total=19, pass=19, fail=0, pass_rate=100.00%
+article_with_fabi: total=20, pass=20, fail=0, pass_rate=100.00%
+article_with_ka: total=19, pass=19, fail=0, pass_rate=100.00%
+article_with_li: total=19, pass=19, fail=0, pass_rate=100.00%
+article_with_wa: total=19, pass=19, fail=0, pass_rate=100.00%
+article_with_wabi: total=19, pass=19, fail=0, pass_rate=100.00%
+boundary_min_al: total=18, pass=18, fail=0, pass_rate=100.00%
+boundary_phrases: total=8, pass=8, fail=0, pass_rate=100.00%
+case_endings: total=180, pass=180, fail=0, pass_rate=100.00%
+hamza_extreme: total=22, pass=22, fail=0, pass_rate=100.00%
+hamzat_wasl: total=10, pass=10, fail=0, pass_rate=100.00%
+hidden_alif_khanjariyya: total=14, pass=14, fail=0, pass_rate=100.00%
+idafa: total=600, pass=600, fail=0, pass_rate=100.00%
+imperative_phrase: total=120, pass=120, fail=0, pass_rate=100.00%
+imperative_with_object_pronoun: total=100, pass=100, fail=0, pass_rate=100.00%
+imperfect_with_object_pronoun: total=100, pass=100, fail=0, pass_rate=100.00%
+loanwords: total=9, pass=9, fail=0, pass_rate=100.00%
+long_quranic_morphology: total=8, pass=8, fail=0, pass_rate=100.00%
+nominal_definite: total=600, pass=600, fail=0, pass_rate=100.00%
+nominal_indefinite: total=600, pass=600, fail=0, pass_rate=100.00%
+noun_with_pronoun: total=150, pass=150, fail=0, pass_rate=100.00%
+perfect_with_object_pronoun: total=100, pass=100, fail=0, pass_rate=100.00%
+prepositional_nominal_phrase: total=300, pass=300, fail=0, pass_rate=100.00%
+prepositional_phrase: total=118, pass=118, fail=0, pass_rate=100.00%
+shadda_and_vowel_interaction: total=11, pass=11, fail=0, pass_rate=100.00%
+silent_letters: total=11, pass=11, fail=0, pass_rate=100.00%
+sun_letter_assimilation: total=10, pass=10, fail=0, pass_rate=100.00%
+taa_marbuta_vs_haa: total=15, pass=15, fail=0, pass_rate=100.00%
+verb_plus_prep_phrase: total=200, pass=200, fail=0, pass_rate=100.00%
+verbal_sentence_imperfect: total=1440, pass=1440, fail=0, pass_rate=100.00%
+verbal_sentence_perfect: total=1440, pass=1440, fail=0, pass_rate=100.00%
+weak_verbs_exceptions: total=14, pass=14, fail=0, pass_rate=100.00%

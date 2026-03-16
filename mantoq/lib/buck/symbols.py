@@ -61,4 +61,17 @@ symbols = [
     "uu",
     "ii",
     "aaaa",
+    # ipa specific
+    "ˤ",  # pharyngealization
+    "ː",  # long duration
+    "ˈ",  # primary stress
+    "ʕ",  # voiced pharyngeal fricative
+    "ʤ",  # voiced postalveolar affricate
+    "ð",  # voiced dental fricative
+    "θ",  # voiceless dental fricative
+    "ɣ",  # voiced velar fricative
+    "ħ",  # voiceless pharyngeal fricative
+    "ʃ",  # voiceless postalveolar fricative
+    "ʔ",  # glottal stop
+    "ɑ",  # open back unrounded vowel
 ]
